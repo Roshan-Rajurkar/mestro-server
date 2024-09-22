@@ -1,8 +1,10 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
+  // @Index() we can add indexing like this
   id: string;
 
   @Column()
@@ -12,5 +14,6 @@ export class UserEntity {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 }

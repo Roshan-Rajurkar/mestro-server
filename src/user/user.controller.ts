@@ -1,20 +1,32 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from './dtos/user.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  getUsers() {
+  findAll() {
     return this.userService.findAll();
   }
 
-  @Get()
+  // @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Get('/:email')
   // need to serialize the user details like password should not be excluded
-  getUser(@Param('id') userId: string) {
-    return this.userService.findOne(userId);
+  findOne(@Param('email') email: string) {
+    return this.userService.findOne(email);
   }
 
   @Post()
