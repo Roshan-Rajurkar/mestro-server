@@ -8,10 +8,15 @@ import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
 import { LoginUserDto } from 'src/user/dtos/login-user.dto';
 import { access } from 'fs';
+import { JwtItem } from 'src/shared/services/jwt.services';
+import { UserDto } from 'src/user/dtos/user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtItem: JwtItem,
+  ) {}
   saltOrRounds = 10;
 
   async register(user: CreateUserDto) {
@@ -55,8 +60,9 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    // Implement jwt token and add on header
-    let access_token = '';
+    const payload = { email: userExist.email, sub: userExist.id };
+
+    const access_token = this.jwtItem.generateToken(payload);
 
     return {
       access_token,

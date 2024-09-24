@@ -23,10 +23,10 @@ export class UserController {
 
   // @UseInterceptors(ClassSerializerInterceptor)
   @UseInterceptors(new SerializeInterceptor(UserDto))
-  @Get('/:email')
+  @Get()
   // need to serialize the user details like password should not be excluded
-  findOne(@Param('email') email: string) {
-    return this.userService.findOne(email);
+  findOne() {
+    return this.userService.findOne();
   }
 
   @Post()
